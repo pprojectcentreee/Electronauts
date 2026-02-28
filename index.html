@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electronauts - Sustainable Energy Solutions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-primary: #0a0e1a; --bg-secondary: #0d1321; --bg-card: #111827;
+      --blue-primary: #00b4d8; --blue-secondary: #0077b6; --blue-dark: #023e8a; --blue-glow: #00e5ff;
+      --green-primary: #00e676; --green-secondary: #00c853; --green-dark: #1b5e20; --green-glow: #69f0ae;
+      --text-primary: #e0e6ed; --text-secondary: #8892a4; --text-heading: #ffffff;
+      --accent-gradient: linear-gradient(135deg, #00b4d8, #00e676);
+      --card-border: rgba(0,180,216,0.15);
+      --glow-blue: 0 0 20px rgba(0,180,216,0.3);
+      --glow-green: 0 0 20px rgba(0,230,118,0.3);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Rajdhani', sans-serif; background: var(--bg-primary); color: var(--text-primary); overflow-x: hidden; line-height: 1.6; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(var(--blue-primary), var(--green-primary)); border-radius: 4px; }
+
+    /* ===== SPLASH ===== */
+    #splash-screen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000;
+      background: radial-gradient(ellipse at center, #0d1b2a 0%, #030712 70%);
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      transition: opacity 1s ease, visibility 1s ease;
+    }
+    #splash-screen.hidden { opacity: 0; visibility: hidden; }
+    .galaxy-container { position: relative; width: 450px; height: 450px; display: flex; align-items: center; justify-content: center; }
+    .galaxy-ring { position: absolute; border-radius: 50%; border: 1px solid transparent; animation: galaxySpin 8s linear infinite; }
+    .galaxy-ring:nth-child(1) { width: 400px; height: 400px; border-top-color: rgba(0,180,216,0.6); border-right-color: rgba(0,230,118,0.3); animation-duration: 6s; box-shadow: 0 0 30px rgba(0,180,216,0.2), inset 0 0 30px rgba(0,180,216,0.1); }
+    .galaxy-ring:nth-child(2) { width: 340px; height: 340px; border-bottom-color: rgba(0,230,118,0.6); border-left-color: rgba(0,180,216,0.3); animation-duration: 8s; animation-direction: reverse; box-shadow: 0 0 25px rgba(0,230,118,0.2), inset 0 0 25px rgba(0,230,118,0.1); }
+    .galaxy-ring:nth-child(3) { width: 280px; height: 280px; border-top-color: rgba(0,229,255,0.5); border-right-color: rgba(105,240,174,0.4); animation-duration: 4s; box-shadow: 0 0 20px rgba(0,229,255,0.15); }
+    .galaxy-ring:nth-child(4) { width: 230px; height: 230px; border-bottom-color: rgba(105,240,174,0.5); animation-duration: 10s; animation-direction: reverse; }
+    .galaxy-stars { position: absolute; width: 100%; height: 100%; }
+    .galaxy-star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; animation: twinkle 2s ease-in-out infinite alternate; }
+    @keyframes galaxySpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes twinkle { 0% { opacity: 0.2; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1.5); } }
+
+    .splash-logo {
+      width: 200px; height: 200px; border-radius: 50%; object-fit: contain;
+      animation: logoPulse 2s ease-in-out infinite; z-index: 10;
+      filter: drop-shadow(0 0 40px rgba(0,180,216,0.6)) drop-shadow(0 0 80px rgba(0,230,118,0.3));
+    }
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 40px rgba(0,180,216,0.6)); }
+      50% { transform: scale(1.08); filter: drop-shadow(0 0 60px rgba(0,230,118,0.7)); }
+    }
+    .splash-text {
+      margin-top: 40px; font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 700;
+      background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; letter-spacing: 6px; animation: textGlow 2s ease-in-out infinite alternate;
+    }
+    @keyframes textGlow { 0% { filter: drop-shadow(0 0 10px rgba(0,180,216,0.3)); } 100% { filter: drop-shadow(0 0 20px rgba(0,230,118,0.5)); } }
+    .splash-loader { margin-top: 30px; width: 200px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+    .splash-loader-bar { width: 0%; height: 100%; background: var(--accent-gradient); border-radius: 3px; animation: loadBar 3.5s ease-in-out forwards; }
+    @keyframes loadBar { 0% { width: 0%; } 100% { width: 100%; } }
+
+    /* ===== PARTICLES ===== */
+    #particles-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    .particle { position: absolute; width: 2px; height: 2px; background: rgba(0,180,216,0.4); border-radius: 50%; animation: floatParticle linear infinite; }
+    @keyframes floatParticle { 0% { transform: translateY(100vh) translateX(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-10vh) translateX(50px); opacity: 0; } }
+
+    /* ===== NAV ===== */
+    nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 12px 0; transition: all 0.4s ease; background: transparent; }
+    nav.scrolled { background: rgba(10,14,26,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--card-border); padding: 8px 0; box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
+    .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 30px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+    .nav-logo { width: 60px; height: 60px; border-radius: 50%; object-fit: contain; filter: drop-shadow(0 0 12px rgba(0,180,216,0.5)); transition: transform 0.3s ease; }
+    .nav-logo:hover { transform: scale(1.1); }
+    .nav-title { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 3px; }
+    .nav-links { display: flex; list-style: none; gap: 8px; }
+    .nav-links a { text-decoration: none; color: var(--text-secondary); font-family: 'Space Grotesk', sans-serif; font-weight: 500; font-size: 0.95rem; padding: 8px 18px; border-radius: 25px; transition: all 0.3s ease; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text-heading); background: rgba(0,180,216,0.1); box-shadow: inset 0 0 15px rgba(0,180,216,0.1); }
+    .hamburger { display: none; flex-direction: column; cursor: pointer; gap: 5px; }
+    .hamburger span { width: 28px; height: 2px; background: var(--blue-primary); transition: 0.3s; border-radius: 2px; }
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+    /* ===== HERO ===== */
+    #hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 120px 30px 80px; }
+    .hero-bg-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0,180,216,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,180,216,0.03) 1px, transparent 1px); background-size: 60px 60px; animation: gridMove 20s linear infinite; }
+    @keyframes gridMove { 0% { transform: translate(0,0); } 100% { transform: translate(60px,60px); } }
+    .hero-content { text-align: center; z-index: 2; max-width: 900px; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 24px; border: 1px solid var(--card-border); border-radius: 30px; font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; color: var(--blue-primary); background: rgba(0,180,216,0.05); margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase; }
+    .hero-badge .dot { width: 8px; height: 8px; background: var(--green-primary); border-radius: 50%; animation: blink 1.5s infinite; }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .hero-title { font-family: 'Orbitron', sans-serif; font-size: 4rem; font-weight: 900; line-height: 1.1; margin-bottom: 25px; color: var(--text-heading); }
+    .hero-title .gradient-text { background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-subtitle { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto 40px; line-height: 1.8; }
+    .hero-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { padding: 14px 36px; background: var(--accent-gradient); border: none; border-radius: 30px; color: #0a0e1a; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(0,180,216,0.3); }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,180,216,0.5); }
+    .btn-secondary { padding: 14px 36px; background: transparent; border: 1px solid var(--card-border); border-radius: 30px; color: var(--text-primary); font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-secondary:hover { border-color: var(--blue-primary); background: rgba(0,180,216,0.05); transform: translateY(-3px); }
+    .hero-stats { display: flex; justify-content: center; gap: 60px; margin-top: 60px; flex-wrap: wrap; }
+    .stat-item { text-align: center; }
+    .stat-number { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-label { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
+
+    /* ===== SECTIONS ===== */
+    section { position: relative; z-index: 1; }
+    .section-container { max-width: 1300px; margin: 0 auto; padding: 100px 30px; }
+    .section-header { text-align: center; margin-bottom: 70px; }
+    .section-label { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; color: var(--green-primary); text-transform: uppercase; letter-spacing: 4px; margin-bottom: 15px; }
+    .section-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 700; color: var(--text-heading); margin-bottom: 15px; }
+    .section-line { width: 80px; height: 3px; background: var(--accent-gradient); margin: 0 auto; border-radius: 3px; }
+
+    /* ===== ABOUT ===== */
+    #about { background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .about-text h3 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: var(--text-heading); margin-bottom: 20px; }
+    .about-text p { font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; color: var(--text-secondary); line-height: 1.9; margin-bottom: 30px; }
+    .about-features { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .about-feature { padding: 20px; background: rgba(0,180,216,0.03); border: 1px solid var(--card-border); border-radius: 16px; transition: all 0.3s ease; }
+    .about-feature:hover { border-color: var(--blue-primary); transform: translateY(-3px); box-shadow: var(--glow-blue); }
+    .about-feature .icon { font-size: 2rem; margin-bottom: 10px; }
+    .about-feature h4 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; color: var(--text-heading); margin-bottom: 5px; }
+    .about-feature p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0; }
+    .about-visual { display: flex; justify-content: center; align-items: center; }
+    .about-logo-showcase { width: 420px; height: 420px; position: relative; display: flex; align-items: center; justify-content: center; }
+    .about-logo-showcase img { width: 250px; height: 250px; border-radius: 50%; object-fit: contain; z-index: 2; filter: drop-shadow(0 0 50px rgba(0,180,216,0.5)); }
+    .about-logo-ring { position: absolute; border-radius: 50%; border: 1px solid; animation: galaxySpin 12s linear infinite; }
+    .about-logo-ring:nth-child(2) { width: 320px; height: 320px; border-color: rgba(0,180,216,0.2); animation-duration: 10s; }
+    .about-logo-ring:nth-child(3) { width: 380px; height: 380px; border-color: rgba(0,230,118,0.15); animation-duration: 14s; animation-direction: reverse; }
+    .about-logo-ring:nth-child(4) { width: 420px; height: 420px; border-color: rgba(0,180,216,0.08); animation-duration: 18s; }
+
+    /* ===== ADVISOR ===== */
+    #advisor { background: var(--bg-secondary); }
+    .advisor-card { max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, rgba(0,180,216,0.05), rgba(0,230,118,0.05)); border: 1px solid var(--card-border); border-radius: 24px; padding: 50px; text-align: center; position: relative; overflow: hidden; }
+    .advisor-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent-gradient); }
+    .advisor-img { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 3px solid var(--blue-primary); margin-bottom: 25px; box-shadow: 0 0 30px rgba(0,180,216,0.3); }
+    .advisor-name { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: var(--text-heading); margin-bottom: 8px; }
+    .advisor-role { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; color: var(--green-primary); letter-spacing: 2px; text-transform: uppercase; }
+    .advisor-subtitle { font-family: 'Space Grotesk', sans-serif; color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; }
+
+    /* ===== TEAMS ===== */
+    #teams { background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%); }
+    .teams-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .team-card { background: var(--bg-card); border: 1px solid var(--card-border); border-radius: 24px; padding: 50px 40px; text-align: center; transition: all 0.4s ease; position: relative; overflow: hidden; cursor: pointer; text-decoration: none; display: block; }
+    .team-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent-gradient); transform: scaleX(0); transition: transform 0.4s ease; }
+    .team-card:hover::before { transform: scaleX(1); }
+    .team-card:hover { transform: translateY(-8px); border-color: rgba(0,180,216,0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.3), var(--glow-blue); }
+    .team-card .team-icon { font-size: 3rem; margin-bottom: 20px; }
+    .team-card h3 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; }
+    .team-card h3.alpha-color { color: var(--blue-primary); }
+    .team-card h3.sigma-color { color: var(--green-primary); }
+    .team-card p { font-family: 'Space Grotesk', sans-serif; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin-bottom: 20px; }
+    .team-card .team-members-count { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; color: var(--text-secondary); letter-spacing: 2px; text-transform: uppercase; }
+    .team-card .view-btn { display: inline-block; margin-top: 20px; padding: 10px 30px; background: var(--accent-gradient); border-radius: 25px; color: #0a0e1a; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: all 0.3s ease; }
+    .team-card .view-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,180,216,0.4); }
+
+    /* ===== FOOTER ===== */
+    footer { background: var(--bg-secondary); border-top: 1px solid var(--card-border); padding: 50px 30px 30px; position: relative; z-index: 1; }
+    .footer-container { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 50px; }
+    .footer-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 15px; }
+    .footer-brand img { width: 55px; height: 55px; border-radius: 50%; filter: drop-shadow(0 0 8px rgba(0,180,216,0.4)); }
+    .footer-brand span { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .footer-desc { font-family: 'Space Grotesk', sans-serif; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; }
+    .footer-col h4 { font-family: 'Space Grotesk', sans-serif; color: var(--text-heading); font-size: 1rem; margin-bottom: 20px; letter-spacing: 1px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li a { font-family: 'Space Grotesk', sans-serif; color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; display: block; padding: 5px 0; transition: color 0.3s ease; }
+    .footer-col ul li a:hover { color: var(--blue-primary); }
+    .footer-bottom { max-width: 1300px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid var(--card-border); text-align: center; font-family: 'Space Grotesk', sans-serif; color: var(--text-secondary); font-size: 0.85rem; }
+
+    /* ===== REVEAL ===== */
+    .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .hero-title { font-size: 3rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .about-visual { order: -1; }
+      .teams-grid { grid-template-columns: 1fr; }
+      .footer-container { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: rgba(10,14,26,0.98); backdrop-filter: blur(20px); flex-direction: column; padding: 20px; border-bottom: 1px solid var(--card-border); }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 12px 20px; border-radius: 12px; }
+      .hero-title { font-size: 2.2rem; }
+      .hero-subtitle { font-size: 1rem; }
+      .hero-stats { gap: 30px; }
+      .stat-number { font-size: 1.8rem; }
+      .section-title { font-size: 1.8rem; }
+      .about-features { grid-template-columns: 1fr; }
+      .about-logo-showcase { width: 300px; height: 300px; }
+      .about-logo-showcase img { width: 160px; height: 160px; }
+      .about-logo-ring:nth-child(2) { width: 220px; height: 220px; }
+      .about-logo-ring:nth-child(3) { width: 260px; height: 260px; }
+      .about-logo-ring:nth-child(4) { width: 300px; height: 300px; }
+      .galaxy-container { width: 320px; height: 320px; }
+      .galaxy-ring:nth-child(1) { width: 280px; height: 280px; }
+      .galaxy-ring:nth-child(2) { width: 240px; height: 240px; }
+      .galaxy-ring:nth-child(3) { width: 200px; height: 200px; }
+      .galaxy-ring:nth-child(4) { width: 160px; height: 160px; }
+      .splash-logo { width: 140px; height: 140px; }
+      .splash-text { font-size: 1.5rem; letter-spacing: 3px; }
+      .nav-logo { width: 50px; height: 50px; }
+      .footer-container { grid-template-columns: 1fr; }
+      .teams-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .hero-title { font-size: 1.7rem; }
+      .advisor-card { padding: 30px 20px; }
+      .splash-logo { width: 120px; height: 120px; }
+      .nav-logo { width: 45px; height: 45px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SPLASH -->
+  <div id="splash-screen">
+    <div class="galaxy-stars" id="galaxy-stars"></div>
+    <div class="galaxy-container">
+      <div class="galaxy-ring"></div>
+      <div class="galaxy-ring"></div>
+      <div class="galaxy-ring"></div>
+      <div class="galaxy-ring"></div>
+      <img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/new%20logo-Photoroom.png" alt="Electronauts Logo" class="splash-logo">
+    </div>
+    <div class="splash-text">ELECTRONAUTS</div>
+    <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+  </div>
+
+  <!-- PARTICLES -->
+  <div id="particles-bg"></div>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-brand">
+        <img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/new%20logo-Photoroom.png" alt="Logo" class="nav-logo">
+        <span class="nav-title">ELECTRONAUTS</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#hero" class="active">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#advisor">Advisor</a></li>
+        <li><a href="#teams">Teams</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><span class="dot"></span> Innovating the Future of Energy</div>
+      <h1 class="hero-title">Welcome to<br><span class="gradient-text">ELECTRONAUTS</span></h1>
+      <p class="hero-subtitle">Committed to building sustainable and intelligent energy solutions. From solar-powered systems to AI-driven energy management, our goal is to design technologies that are efficient, eco-friendly, and future-ready.</p>
+      <div class="hero-buttons">
+        <a href="#teams" class="btn-primary">⚡ Explore Projects</a>
+        <a href="#about" class="btn-secondary">Learn More →</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-number">2</div><div class="stat-label">Teams</div></div>
+        <div class="stat-item"><div class="stat-number">6</div><div class="stat-label">Members</div></div>
+        <div class="stat-item"><div class="stat-number">2</div><div class="stat-label">Projects</div></div>
+        <div class="stat-item"><div class="stat-number">∞</div><div class="stat-label">Innovation</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-container">
+      <div class="section-header reveal">
+        <div class="section-label">Who We Are</div>
+        <h2 class="section-title">Our Mission</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <h3>Building a Smarter & <span style="color:var(--green-primary);">Greener</span> World</h3>
+          <p>Electronauts is committed to building sustainable and intelligent energy solutions. From solar-powered systems to AI-driven energy management, our goal is to design technologies that are efficient, eco-friendly, and future-ready.</p>
+          <p>Our team is split into two specialized groups — <strong style="color:var(--blue-primary);">Team Alpha</strong> and <strong style="color:var(--green-primary);">Team Sigma</strong> — each working on cutting-edge energy projects.</p>
+          <div class="about-features">
+            <div class="about-feature"><div class="icon">☀️</div><h4>Solar Energy</h4><p>Harnessing the power of the sun</p></div>
+            <div class="about-feature"><div class="icon">🤖</div><h4>AI-Driven</h4><p>Intelligent energy management</p></div>
+            <div class="about-feature"><div class="icon">🌱</div><h4>Eco-Friendly</h4><p>Sustainable solutions first</p></div>
+            <div class="about-feature"><div class="icon">🔮</div><h4>Future-Ready</h4><p>Tomorrow's technology today</p></div>
+          </div>
+        </div>
+        <div class="about-visual reveal">
+          <div class="about-logo-showcase">
+            <img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/new%20logo-Photoroom.png" alt="Electronauts Logo">
+            <div class="about-logo-ring"></div>
+            <div class="about-logo-ring"></div>
+            <div class="about-logo-ring"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADVISOR -->
+  <section id="advisor">
+    <div class="section-container">
+      <div class="section-header reveal">
+        <div class="section-label">Guidance</div>
+        <h2 class="section-title">Faculty Advisor</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="advisor-card reveal">
+        <img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/veketesh%20sir.jpg" alt="Mr. Chintala Venkatesh" class="advisor-img">
+        <h3 class="advisor-name">Mr. Chintala Venkatesh</h3>
+        <div class="advisor-role">Faculty Advisor</div>
+        <div class="advisor-subtitle">Guiding both Team Alpha & Team Sigma</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAMS -->
+  <section id="teams">
+    <div class="section-container">
+      <div class="section-header reveal">
+        <div class="section-label">Our Teams & Projects</div>
+        <h2 class="section-title">Meet the Teams</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="teams-grid reveal">
+        <a href="alpha.html" class="team-card">
+          <div class="team-icon">⚡</div>
+          <h3 class="alpha-color">TEAM ALPHA</h3>
+          <p>Self-Optimizing Solar Electric Vehicle Using AI-Based Energy Management System</p>
+          <div class="team-members-count">3 Members</div>
+          <span class="view-btn">View Project →</span>
+        </a>
+        <a href="sigma.html" class="team-card">
+          <div class="team-icon">🔋</div>
+          <h3 class="sigma-color">TEAM SIGMA</h3>
+          <p>Smart Energy Consumption Meter — Real-time monitoring, IoT, and smart load control</p>
+          <div class="team-members-count">3 Members</div>
+          <span class="view-btn">View Project →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-container">
+      <div>
+        <div class="footer-brand">
+          <img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/new%20logo-Photoroom.png" alt="Logo">
+          <span>ELECTRONAUTS</span>
+        </div>
+        <p class="footer-desc">Building sustainable and intelligent energy solutions for a smarter and greener world. Innovation meets responsibility.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#advisor">Faculty Advisor</a></li>
+          <li><a href="#teams">Teams</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Teams</h4>
+        <ul>
+          <li><a href="alpha.html">Team Alpha</a></li>
+          <li><a href="sigma.html">Team Sigma</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2025 Electronauts. All rights reserved. | Built with ⚡ and 💚</div>
+  </footer>
+
+  <script>
+    // Splash
+    window.addEventListener('load', () => { setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden'); }, 4000); });
+
+    // Galaxy stars
+    const gs = document.getElementById('galaxy-stars');
+    for (let i = 0; i < 80; i++) {
+      const s = document.createElement('div'); s.className = 'galaxy-star';
+      s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%';
+      s.style.animationDelay = Math.random()*3+'s'; s.style.animationDuration = (1+Math.random()*2)+'s';
+      const sz = Math.random()*3+1; s.style.width = sz+'px'; s.style.height = sz+'px';
+      const c = ['rgba(0,180,216,0.6)','rgba(0,230,118,0.5)','rgba(255,255,255,0.7)','rgba(0,229,255,0.5)'];
+      s.style.background = c[Math.floor(Math.random()*c.length)]; gs.appendChild(s);
+    }
+
+    // Particles
+    const pb = document.getElementById('particles-bg');
+    for (let i = 0; i < 40; i++) {
+      const p = document.createElement('div'); p.className = 'particle';
+      p.style.left = Math.random()*100+'%'; p.style.animationDuration = (8+Math.random()*15)+'s';
+      p.style.animationDelay = Math.random()*10+'s';
+      const sz = Math.random()*3+1; p.style.width = sz+'px'; p.style.height = sz+'px';
+      p.style.background = Math.random()>0.5 ? 'rgba(0,180,216,0.3)' : 'rgba(0,230,118,0.3)';
+      pb.appendChild(p);
+    }
+
+    // Nav
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+      const secs = document.querySelectorAll('section');
+      const nls = document.querySelectorAll('.nav-links a');
+      let cur = '';
+      secs.forEach(s => { if (window.scrollY >= s.offsetTop - 150) cur = s.getAttribute('id'); });
+      nls.forEach(l => { l.classList.remove('active'); if (l.getAttribute('href') === '#'+cur) l.classList.add('active'); });
+    });
+
+    // Hamburger
+    const hb = document.getElementById('hamburger'), nl = document.getElementById('navLinks');
+    hb.addEventListener('click', () => { hb.classList.toggle('active'); nl.classList.toggle('open'); });
+    document.querySelectorAll('.nav-links a').forEach(l => { l.addEventListener('click', () => { hb.classList.remove('active'); nl.classList.remove('open'); }); });
+
+    // Reveal
+    const re = document.querySelectorAll('.reveal');
+    const ob = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    re.forEach(el => ob.observe(el));
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function(e) { e.preventDefault(); const t = document.querySelector(this.getAttribute('href')); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+    });
+  </script>
+</body>
+</html>

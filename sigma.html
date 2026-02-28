@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Sigma - Electronauts</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-primary: #0a0e1a; --bg-secondary: #0d1321; --bg-card: #111827;
+      --blue-primary: #00b4d8; --green-primary: #00e676;
+      --text-primary: #e0e6ed; --text-secondary: #8892a4; --text-heading: #ffffff;
+      --accent-gradient: linear-gradient(135deg, #00b4d8, #00e676);
+      --card-border: rgba(0,180,216,0.15);
+      --glow-blue: 0 0 20px rgba(0,180,216,0.3);
+      --glow-green: 0 0 20px rgba(0,230,118,0.3);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Rajdhani', sans-serif; background: var(--bg-primary); color: var(--text-primary); overflow-x: hidden; line-height: 1.6; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(var(--blue-primary), var(--green-primary)); border-radius: 4px; }
+
+    nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 12px 0; background: rgba(10,14,26,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--card-border); }
+    .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 30px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+    .nav-logo { width: 60px; height: 60px; border-radius: 50%; object-fit: contain; filter: drop-shadow(0 0 12px rgba(0,180,216,0.5)); transition: transform 0.3s ease; }
+    .nav-logo:hover { transform: scale(1.1); }
+    .nav-title { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 3px; }
+    .nav-links { display: flex; list-style: none; gap: 8px; }
+    .nav-links a { text-decoration: none; color: var(--text-secondary); font-family: 'Space Grotesk', sans-serif; font-weight: 500; font-size: 0.95rem; padding: 8px 18px; border-radius: 25px; transition: all 0.3s ease; }
+    .nav-links a:hover { color: var(--text-heading); background: rgba(0,180,216,0.1); }
+    .hamburger { display: none; flex-direction: column; cursor: pointer; gap: 5px; }
+    .hamburger span { width: 28px; height: 2px; background: var(--blue-primary); transition: 0.3s; border-radius: 2px; }
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+    .section-container { max-width: 1300px; margin: 0 auto; padding: 120px 30px 80px; }
+    .section-header { text-align: center; margin-bottom: 70px; }
+    .section-label { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; color: var(--green-primary); text-transform: uppercase; letter-spacing: 4px; margin-bottom: 15px; }
+    .section-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 700; color: var(--text-heading); margin-bottom: 15px; }
+    .section-line { width: 80px; height: 3px; background: var(--accent-gradient); margin: 0 auto; border-radius: 3px; }
+
+    .team-header-card { background: linear-gradient(135deg, rgba(0,230,118,0.08), rgba(0,180,216,0.05)); border: 1px solid var(--card-border); border-radius: 24px; padding: 40px; margin-bottom: 40px; text-align: center; }
+    .team-name { font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 10px; color: var(--green-primary); }
+    .team-project-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; color: var(--text-secondary); }
+
+    .team-members { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 50px; }
+    .member-card { background: var(--bg-card); border: 1px solid var(--card-border); border-radius: 20px; padding: 35px 25px; text-align: center; transition: all 0.4s ease; position: relative; overflow: hidden; }
+    .member-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent-gradient); transform: scaleX(0); transition: transform 0.4s ease; }
+    .member-card:hover::before { transform: scaleX(1); }
+    .member-card:hover { transform: translateY(-8px); border-color: rgba(0,180,216,0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.3), var(--glow-blue); }
+    .member-card.lead { border-color: rgba(0,230,118,0.3); background: linear-gradient(135deg, rgba(0,230,118,0.03), rgba(0,180,216,0.03)); }
+    .member-card.lead:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.3), var(--glow-green); }
+    .member-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid var(--card-border); margin-bottom: 20px; transition: all 0.4s ease; }
+    .member-card:hover .member-img { border-color: var(--blue-primary); box-shadow: 0 0 25px rgba(0,180,216,0.3); }
+    .member-card.lead .member-img { border-color: rgba(0,230,118,0.4); }
+    .member-card.lead:hover .member-img { border-color: var(--green-primary); box-shadow: 0 0 25px rgba(0,230,118,0.3); }
+    .member-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 600; color: var(--text-heading); margin-bottom: 5px; }
+    .member-role { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; color: var(--blue-primary); text-transform: uppercase; letter-spacing: 2px; }
+    .member-role.lead-role { color: var(--green-primary); }
+    .lead-badge { display: inline-block; padding: 4px 14px; background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.3); border-radius: 20px; font-size: 0.7rem; color: var(--green-primary); font-family: 'Orbitron', sans-serif; letter-spacing: 2px; margin-top: 10px; }
+
+    .project-hero-img { width: 100%; max-height: 400px; object-fit: cover; border-radius: 20px; border: 1px solid var(--card-border); margin-bottom: 40px; }
+    .project-content { display: grid; grid-template-columns: 1fr; gap: 40px; }
+    .project-block { background: var(--bg-card); border: 1px solid var(--card-border); border-radius: 20px; padding: 40px; transition: all 0.3s ease; }
+    .project-block:hover { border-color: rgba(0,180,216,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .project-block h3 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: var(--blue-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .project-block h3 .block-number { display: inline-flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; background: rgba(0,180,216,0.1); border: 1px solid rgba(0,180,216,0.3); font-size: 0.9rem; color: var(--blue-primary); }
+    .project-block p { font-family: 'Space Grotesk', sans-serif; color: var(--text-secondary); line-height: 1.8; font-size: 1rem; }
+    .project-block ul { list-style: none; padding: 0; }
+    .project-block ul li { font-family: 'Space Grotesk', sans-serif; color: var(--text-secondary); padding: 8px 0 8px 25px; position: relative; font-size: 0.95rem; }
+    .project-block ul li::before { content: '▸'; position: absolute; left: 0; color: var(--green-primary); font-size: 1.1rem; }
+
+    .architecture-flow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; margin: 20px 0; }
+    .flow-item { padding: 10px 20px; background: rgba(0,180,216,0.08); border: 1px solid rgba(0,180,216,0.2); border-radius: 10px; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; color: var(--text-primary); }
+    .flow-arrow { color: var(--green-primary); font-size: 1.3rem; font-weight: bold; }
+
+    .code-block { background: rgba(0,0,0,0.4); border: 1px solid rgba(0,180,216,0.2); border-radius: 12px; padding: 25px; font-family: 'Courier New', monospace; font-size: 0.9rem; color: var(--green-primary); line-height: 1.8; overflow-x: auto; margin: 15px 0; }
+    .code-comment { color: var(--text-secondary); font-style: italic; }
+    .code-value { color: #ff9800; }
+
+    .project-images-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 30px 0; }
+    .project-img-card { border-radius: 16px; overflow: hidden; border: 1px solid var(--card-border); transition: all 0.3s ease; }
+    .project-img-card:hover { transform: scale(1.02); border-color: var(--blue-primary); box-shadow: var(--glow-blue); }
+    .project-img-card img { width: 100%; height: 220px; object-fit: cover; display: block; }
+    .project-img-card .img-caption { padding: 12px 16px; background: var(--bg-card); font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; color: var(--text-secondary); text-align: center; }
+
+    .team-photo-section { margin-top: 50px; text-align: center; }
+    .team-photo-section h3 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: var(--green-primary); margin-bottom: 20px; }
+    .team-photo { width: 100%; max-width: 700px; border-radius: 20px; border: 2px solid var(--card-border); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+    .team-photo-caption { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; color: var(--text-secondary); margin-top: 12px; font-style: italic; }
+
+    .back-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 30px; background: transparent; border: 1px solid var(--card-border); border-radius: 30px; color: var(--text-primary); font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: all 0.3s ease; margin-bottom: 40px; }
+    .back-btn:hover { border-color: var(--blue-primary); background: rgba(0,180,216,0.05); transform: translateY(-2px); }
+
+    footer { background: var(--bg-secondary); border-top: 1px solid var(--card-border); padding: 30px; text-align: center; position: relative; z-index: 1; }
+    .footer-bottom { font-family: 'Space Grotesk', sans-serif; color: var(--text-secondary); font-size: 0.85rem; }
+
+    .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: rgba(10,14,26,0.98); backdrop-filter: blur(20px); flex-direction: column; padding: 20px; border-bottom: 1px solid var(--card-border); }
+      .nav-links.open { display: flex; }
+      .section-title { font-size: 1.8rem; }
+      .team-members { grid-template-columns: 1fr; }
+      .project-images-grid { grid-template-columns: 1fr; }
+      .architecture-flow { flex-direction: column; }
+      .nav-logo { width: 50px; height: 50px; }
+    }
+    @media (max-width: 480px) { .nav-logo { width: 45px; height: 45px; } }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/new%20logo-Photoroom.png" alt="Logo" class="nav-logo">
+        <span class="nav-title">ELECTRONAUTS</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#advisor">Advisor</a></li>
+        <li><a href="index.html#teams">Teams</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <div class="section-container">
+    <a href="index.html" class="back-btn">← Back to Home</a>
+
+    <div class="section-header reveal">
+      <div class="section-label">Team Sigma</div>
+      <h2 class="section-title">🔋 TEAM SIGMA</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="team-header-card reveal">
+      <h2 class="team-name">🔋 TEAM SIGMA</h2>
+      <p class="team-project-title">Smart Energy Consumption Meter</p>
+    </div>
+
+    <div class="team-members reveal">
+      <div class="member-card lead">
+        <img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/guru.png" alt="Guru Adithya S" class="member-img">
+        <h4 class="member-name">Guru Adithya S</h4>
+        <div class="member-role lead-role">Team Lead</div>
+        <span class="lead-badge">★ LEAD</span>
+      </div>
+      <div class="member-card">
+        <img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/harshithaa.png" alt="Harshithaa N" class="member-img">
+        <h4 class="member-name">Harshithaa N</h4>
+        <div class="member-role">Team Member</div>
+      </div>
+      <div class="member-card">
+        <img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/varsha%20shree.png" alt="Varsha Shree P" class="member-img">
+        <h4 class="member-name">Varsha Shree P</h4>
+        <div class="member-role">Team Member</div>
+      </div>
+    </div>
+
+    <img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/enrgy%20img%20for%20web.png" alt="Smart Energy Meter" class="project-hero-img reveal">
+
+    <div class="project-content">
+      <div class="project-block reveal"><h3><span class="block-number">1</span> Abstract</h3><p>The Smart Energy Consumption Meter is an intelligent system designed to monitor, analyze, and optimize household electricity usage in real time. The system measures voltage, current, power (W), energy consumption (kWh), and power factor using sensors and a microcontroller-based processing unit.</p><br><p>The collected data is displayed on an LCD/OLED screen and transmitted to a cloud-based IoT platform for remote monitoring. The system also includes smart load control using relay modules.</p></div>
+      <div class="project-block reveal"><h3><span class="block-number">2</span> Introduction</h3><p>With increasing electricity demand and rising energy costs, efficient energy monitoring has become essential. Traditional energy meters only measure total consumption without providing real-time insights.</p><br><p>The Smart Energy Consumption Meter provides real-time monitoring, data logging, and intelligent load management to help users track and reduce energy usage.</p></div>
+      <div class="project-block reveal"><h3><span class="block-number">3</span> Problem Statement</h3><ul><li>Lack of real-time electricity monitoring in homes</li><li>No visibility of individual appliance energy usage</li><li>Energy wastage due to inefficient usage</li><li>No predictive analysis for electricity consumption</li></ul></div>
+      <div class="project-block reveal"><h3><span class="block-number">4</span> Objectives</h3><ul><li>To design a real-time energy monitoring system</li><li>To measure voltage, current, power, and energy consumption</li><li>To display live electrical parameters</li><li>To transmit data to cloud for remote access</li><li>To enable smart load control for energy saving</li></ul></div>
+      <div class="project-block reveal"><h3><span class="block-number">5</span> System Components</h3><ul><li>AC Mains Supply (230V)</li><li>Current Transformer (CT Sensor)</li><li>Voltage Sensing Module</li><li>ESP32 / Arduino Microcontroller</li><li>LCD / OLED Display</li><li>Relay Module (Smart Load Control)</li><li>WiFi Module (Built-in ESP32)</li><li>PCB Board</li><li>IoT Cloud Platform</li></ul></div>
+      <div class="project-block reveal">
+        <h3><span class="block-number">6</span> System Architecture</h3>
+        <div class="architecture-flow"><span class="flow-item">AC Supply</span><span class="flow-arrow">→</span><span class="flow-item">CT + Voltage Sensor</span><span class="flow-arrow">→</span><span class="flow-item">ESP32</span></div>
+        <div class="architecture-flow" style="margin-top:15px;"><span class="flow-item">ESP32</span><span class="flow-arrow">→</span><span class="flow-item">LCD Display</span></div>
+        <div class="architecture-flow" style="margin-top:15px;"><span class="flow-item">ESP32</span><span class="flow-arrow">→</span><span class="flow-item">WiFi</span><span class="flow-arrow">→</span><span class="flow-item">IoT Cloud</span></div>
+        <div class="architecture-flow" style="margin-top:15px;"><span class="flow-item">ESP32</span><span class="flow-arrow">→</span><span class="flow-item">Relay</span><span class="flow-arrow">→</span><span class="flow-item">Loads</span></div>
+        <div class="project-images-grid" style="margin-top:30px;"><div class="project-img-card"><img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/enegy%20neter%20skimatics%20diagram.png" alt="Schematic"><div class="img-caption">System Schematic Diagram</div></div></div>
+      </div>
+      <div class="project-block reveal"><h3><span class="block-number">7</span> Working Principle</h3><ul><li>The AC mains supply powers household appliances</li><li>The CT sensor measures current flowing through the live wire</li><li>The voltage sensor measures supply voltage</li><li>The microcontroller calculates Voltage, Current, Power, Energy, and Power Factor</li><li>Values displayed on LCD</li><li>Data sent to IoT cloud via WiFi</li><li>Relay module can disconnect loads during overload</li></ul></div>
+      <div class="project-block reveal">
+        <h3><span class="block-number">8</span> Mathematical Calculations</h3>
+        <div class="code-block"><span class="code-comment">// Power Calculation</span><br>Power (W) = Voltage (V) × Current (A)<br><br><span class="code-comment">// Energy Calculation</span><br>Energy (kWh) = Power (W) × Time (hours) / <span class="code-value">1000</span><br><br><span class="code-comment">// Power Factor</span><br>Power Factor = Real Power / Apparent Power</div>
+      </div>
+      <div class="project-block reveal">
+        <h3><span class="block-number">⚙</span> Project Visuals</h3>
+        <div class="project-images-grid"><div class="project-img-card"><img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/energy%20meter%20finalsix%20for%20web.png" alt="Energy Meter"><div class="img-caption">Smart Energy Meter Design</div></div><div class="project-img-card"><img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/anither%20image%20nergy.png" alt="Energy Meter View"><div class="img-caption">Energy Monitoring System</div></div></div>
+      </div>
+      <div class="project-block reveal"><h3><span class="block-number">9</span> Features</h3><ul><li>Real-time monitoring</li><li>IoT-based remote access</li><li>Overload protection</li><li>Smart load control</li><li>Daily and monthly consumption tracking</li><li>Bill estimation feature</li></ul></div>
+      <div class="project-block reveal"><h3><span class="block-number">10</span> Applications</h3><ul><li>Residential homes</li><li>Smart apartments</li><li>Small industries</li><li>Hostels and campuses</li><li>Energy audit systems</li></ul></div>
+      <div class="project-block reveal"><h3><span class="block-number">11</span> Advantages</h3><ul><li>Reduces electricity wastage</li><li>Helps in energy conservation</li><li>Provides detailed usage insights</li><li>Improves electrical safety</li><li>Cost-effective monitoring solution</li></ul></div>
+      <div class="project-block reveal"><h3><span class="block-number">12</span> Future Enhancements</h3><ul><li>AI-based energy prediction</li><li>Mobile application integration</li><li>Appliance-level monitoring</li><li>Solar system integration</li><li>3-phase industrial version</li></ul></div>
+      <div class="project-block reveal"><h3><span class="block-number">13</span> Conclusion</h3><p>The Smart Energy Consumption Meter provides an efficient and intelligent solution for monitoring and managing electricity usage. By integrating real-time sensing, IoT communication, and smart control, the system promotes energy conservation, cost savings, and smarter power management in modern households.</p></div>
+    </div>
+
+    <div class="team-photo-section reveal">
+      <h3>📸 Team Sigma — Project Initiation at MSIIC</h3>
+      <img src="https://raw.githubusercontent.com/pprojectcentreee/Electronauts/main/team%20sigma.jpeg" alt="Team Sigma" class="team-photo">
+      <p class="team-photo-caption">Team Sigma during project initiation at MSIIC</p>
+    </div>
+  </div>
+
+  <footer><div class="footer-bottom">&copy; 2025 Electronauts. All rights reserved. | Built with ⚡ and 💚</div></footer>
+
+  <script>
+    const hb = document.getElementById('hamburger'), nl = document.getElementById('navLinks');
+    hb.addEventListener('click', () => { hb.classList.toggle('active'); nl.classList.toggle('open'); });
+    document.querySelectorAll('.nav-links a').forEach(l => { l.addEventListener('click', () => { hb.classList.remove('active'); nl.classList.remove('open'); }); });
+    const re = document.querySelectorAll('.reveal');
+    const ob = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    re.forEach(el => ob.observe(el));
+  </script>
+</body>
+</html>
